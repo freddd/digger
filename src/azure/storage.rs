@@ -25,7 +25,7 @@ impl AzureStorage {
     }
 
     fn timeout(&self) -> Duration {
-        return Duration::new(5, 0);
+        Duration::new(5, 0)
     }
 
     pub fn new(account: &str) -> AzureStorage {

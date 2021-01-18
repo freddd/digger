@@ -60,7 +60,7 @@ impl AWSs3 {
     }
 
     fn file_name(&self) -> String {
-        return String::from("really-long-name-that-is-definitely-not-used.txt");
+        String::from("really-long-name-that-is-definitely-not-used.txt")
     }
 
     // TODO: Clean up and refactor

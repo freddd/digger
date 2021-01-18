@@ -27,7 +27,7 @@ impl GCS {
     }
 
     fn permissions(&self) -> &[(&str, &str)] {
-        return &[
+        &[
             ("permissions", "storage.buckets.delete"),
             ("permissions", "storage.buckets.get"),
             ("permissions", "storage.buckets.getIamPolicy"),
@@ -38,7 +38,7 @@ impl GCS {
             ("permissions", "storage.objects.get"),
             ("permissions", "storage.objects.list"),
             ("permissions", "storage.objects.update"),
-        ];
+        ]
     }
 
     pub async fn scan(&self, buckets: Vec<&str>) {
@@ -122,7 +122,7 @@ impl GCS {
             .await?;
         let json: TestIAMResponse = response.json().await?;
 
-        return Ok(json.permissions.unwrap_or(Vec::new()));
+        return Ok(json.permissions.unwrap_or_default());
     }
 
     async fn unauthenticated(&self, bucket: &str) -> Result<Vec<String>> {
@@ -138,7 +138,7 @@ impl GCS {
 
         if response.status().is_success() {
             let test_iam_response = response.json::<TestIAMResponse>().await?;
-            return Ok(test_iam_response.permissions.unwrap_or(Vec::new()));
+            return Ok(test_iam_response.permissions.unwrap_or_default());
         }
 
         return Err(response.error_for_status().unwrap_err());
