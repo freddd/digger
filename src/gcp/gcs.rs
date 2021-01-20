@@ -46,8 +46,8 @@ impl GCS {
             let exists = self.exists(bucket).await;
             if exists {
                 debug!("Bucket {} exists", bucket);
-                self.print_result(false, self.unauthenticated(bucket).await, bucket.clone());
-                self.print_result(true, self.authenticated(bucket).await, bucket.clone());
+                self.print_result(false, self.unauthenticated(bucket).await, bucket);
+                self.print_result(true, self.authenticated(bucket).await, bucket);
             } else {
                 error!("Bucket {} does not exist", bucket);
             }
