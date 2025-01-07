@@ -5,9 +5,8 @@ use reqwest::ClientBuilder;
 use reqwest::Result;
 use reqwest::StatusCode;
 use serde::{Deserialize, Serialize};
-use std::env;
+use tame_oauth::gcp::*;
 use std::time::Duration;
-use tame_oauth::gcp::prelude::*;
 
 pub struct GCS;
 
@@ -55,15 +54,14 @@ impl GCS {
     }
 
     async fn authenticated(&self, bucket: &str) -> Result<Vec<String>> {
-        let key_path =
-            env::var("GOOGLE_APPLICATION_CREDENTIALS").expect("SET GOOGLE_APPLICATION_CREDENTIALS");
-        let scopes: Vec<String> =
-            vec!["https://www.googleapis.com/auth/devstorage.read_only".to_string()];
-        let service_key = std::fs::read_to_string(key_path).expect("failed to read json key");
-        let acct_info = ServiceAccountInfo::deserialize(service_key).unwrap();
-        let acct_access = ServiceAccountAccess::new(acct_info).unwrap();
+        let provider = TokenProviderWrapper::get_default_provider()
+        .expect("unable to read default token provider")
+        .expect("unable to find default token provider");
 
-        let token = match acct_access.get_token(&scopes).unwrap() {
+        let scopes: Vec<String> =
+        vec!["https://www.googleapis.com/auth/devstorage.read_only".to_string()];
+
+        let token = match provider.get_token(&scopes).unwrap() {
             TokenOrRequest::Request {
                 request,
                 scope_hash,
@@ -98,7 +96,7 @@ impl GCS {
                 let buffer = response.bytes().await.unwrap();
                 let response = builder.body(buffer).unwrap();
 
-                let token_response = acct_access.parse_token_response(scope_hash, response);
+                let token_response = provider.parse_token_response(scope_hash, response);
                 if token_response.is_err() {
                     error!("{:?}", token_response.unwrap_err());
                     panic!();
