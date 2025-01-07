@@ -7,15 +7,6 @@ pub struct AzureStorage {
     account: String,
 }
 
-#[derive(Debug, Clone)]
-struct UnknownError(u16);
-impl Error for UnknownError {}
-impl fmt::Display for UnknownError {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "Error, status code: {}", self.0)
-    }
-}
-
 impl AzureStorage {
     fn base_url_with_container(&self, container: &str) -> String {
         format!(
