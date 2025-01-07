@@ -5,8 +5,8 @@ use reqwest::ClientBuilder;
 use reqwest::Result;
 use reqwest::StatusCode;
 use serde::{Deserialize, Serialize};
-use tame_oauth::gcp::*;
 use std::time::Duration;
+use tame_oauth::gcp::*;
 
 pub struct GCS;
 
@@ -55,11 +55,11 @@ impl GCS {
 
     async fn authenticated(&self, bucket: &str) -> Result<Vec<String>> {
         let provider = TokenProviderWrapper::get_default_provider()
-        .expect("unable to read default token provider")
-        .expect("unable to find default token provider");
+            .expect("unable to read default token provider")
+            .expect("unable to find default token provider");
 
         let scopes: Vec<String> =
-        vec!["https://www.googleapis.com/auth/devstorage.read_only".to_string()];
+            vec!["https://www.googleapis.com/auth/devstorage.read_only".to_string()];
 
         let token = match provider.get_token(&scopes).unwrap() {
             TokenOrRequest::Request {

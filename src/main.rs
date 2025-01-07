@@ -21,12 +21,7 @@ async fn main() -> Result<(), ()> {
             Command::new("s3")
                 .about("scans s3 buckets")
                 .arg(Arg::new("buckets").required(true).num_args(1..))
-                .arg(
-                    Arg::new("region")
-                        .short('r')
-                        .required(true)
-                        .num_args(1),
-                ),
+                .arg(Arg::new("region").short('r').required(true).num_args(1)),
         )
         .subcommand(
             Command::new("gcs")
@@ -47,24 +42,34 @@ async fn main() -> Result<(), ()> {
         )
         .get_matches();
 
-        let _matches = match matches.subcommand() {
-            Some(("s3", matches)) => {
-            let b: Vec<&str> = matches.get_many::<String>("buckets").unwrap().map(|s| s.as_str()).collect();
+    let _matches = match matches.subcommand() {
+        Some(("s3", matches)) => {
+            let b: Vec<&str> = matches
+                .get_many::<String>("buckets")
+                .unwrap()
+                .map(|s| s.as_str())
+                .collect();
             let region: &str = matches.get_one::<String>(&"region").unwrap();
 
             aws::s3::AWSs3::new(region).scan(b).await;
         }
         Some(("gcs", matches)) => {
-            let b: Vec<&str> = matches.get_many::<String>("buckets").unwrap().map(|s| s.as_str()).collect();
+            let b: Vec<&str> = matches
+                .get_many::<String>("buckets")
+                .unwrap()
+                .map(|s| s.as_str())
+                .collect();
             gcp::gcs::GCS.scan(b).await;
         }
         Some(("storage", matches)) => {
-            let b: Vec<&str> = matches.get_many::<String>("buckets").unwrap().map(|s| s.as_str()).collect();
+            let b: Vec<&str> = matches
+                .get_many::<String>("buckets")
+                .unwrap()
+                .map(|s| s.as_str())
+                .collect();
             let account: &str = matches.get_one::<String>("account").unwrap();
 
-            azure::storage::AzureStorage::new(account)
-                .scan(b)
-                .await;
+            azure::storage::AzureStorage::new(account).scan(b).await;
         }
         _ => unreachable!(),
     };

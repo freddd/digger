@@ -152,7 +152,7 @@ impl AWSs3 {
     async fn head(&self, bucket: &str) -> Result<bool, Box<dyn Error>> {
         let req = HeadBucketRequest {
             bucket: String::from(bucket),
-            expected_bucket_owner: Option::None
+            expected_bucket_owner: Option::None,
         };
 
         match S3Client::new(Region::default()).head_bucket(req).await {
