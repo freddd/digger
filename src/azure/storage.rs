@@ -1,6 +1,6 @@
 use log::{debug, error, info};
 use reqwest::ClientBuilder;
-use std::{error::Error, fmt, time::Duration};
+use std::{error::Error, time::Duration};
 
 #[derive(Debug, Clone)]
 pub struct AzureStorage {
