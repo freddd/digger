@@ -8,7 +8,7 @@ use serde::{Deserialize, Serialize};
 use std::time::Duration;
 use tame_oauth::gcp::*;
 
-pub struct GCS;
+pub struct Gcs;
 
 #[derive(Serialize, Deserialize, Debug)]
 struct TestIAMResponse {
@@ -16,7 +16,7 @@ struct TestIAMResponse {
     permissions: Option<Vec<String>>,
 }
 
-impl GCS {
+impl Gcs {
     fn base_url(&self, bucket: &str) -> String {
         format!("https://storage.googleapis.com/storage/v1/b/{}", bucket)
     }
@@ -120,7 +120,7 @@ impl GCS {
             .await?;
         let json: TestIAMResponse = response.json().await?;
 
-        return Ok(json.permissions.unwrap_or_default());
+        Ok(json.permissions.unwrap_or_default())
     }
 
     async fn unauthenticated(&self, bucket: &str) -> Result<Vec<String>> {
@@ -139,7 +139,7 @@ impl GCS {
             return Ok(test_iam_response.permissions.unwrap_or_default());
         }
 
-        return Err(response.error_for_status().unwrap_err());
+        Err(response.error_for_status().unwrap_err())
     }
 
     fn print_result(&self, authenticated: bool, permissions: Result<Vec<String>>, bucket: &str) {

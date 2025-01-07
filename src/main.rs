@@ -42,14 +42,14 @@ async fn main() -> Result<(), ()> {
         )
         .get_matches();
 
-    let _matches = match matches.subcommand() {
+    match matches.subcommand() {
         Some(("s3", matches)) => {
             let b: Vec<&str> = matches
                 .get_many::<String>("buckets")
                 .unwrap()
                 .map(|s| s.as_str())
                 .collect();
-            let region: &str = matches.get_one::<String>(&"region").unwrap();
+            let region: &str = matches.get_one::<String>("region").unwrap();
 
             aws::s3::AWSs3::new(region).scan(b).await;
         }
@@ -59,7 +59,7 @@ async fn main() -> Result<(), ()> {
                 .unwrap()
                 .map(|s| s.as_str())
                 .collect();
-            gcp::gcs::GCS.scan(b).await;
+            gcp::gcs::Gcs.scan(b).await;
         }
         Some(("storage", matches)) => {
             let b: Vec<&str> = matches

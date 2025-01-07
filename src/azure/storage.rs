@@ -63,7 +63,7 @@ impl AzureStorage {
             return Ok(());
         }
 
-        return Err(Box::new(response.error_for_status().unwrap_err()));
+        Err(Box::new(response.error_for_status().unwrap_err()))
     }
     async fn list(&self, container: &str) -> Result<(), Box<dyn Error>> {
         let url = self.base_url_with_container(container);
@@ -74,7 +74,7 @@ impl AzureStorage {
             return Ok(());
         }
 
-        return Err(Box::new(response.error_for_status().unwrap_err()));
+        Err(Box::new(response.error_for_status().unwrap_err()))
     }
     async fn _upload(&self, _container: &str) {
         panic!("Not yet implemented")
